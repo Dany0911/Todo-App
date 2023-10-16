@@ -9,7 +9,8 @@ const activeButton = document.getElementById('active-button');
 const completedButton = document.getElementById('completed-button');
 
 // Initialize tasks array
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let tasks = [];
+
 // Add event listener to add button
 addButton.addEventListener('click', addTask);
 
