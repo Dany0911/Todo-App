@@ -1,4 +1,3 @@
-// Get DOM elements
 const taskInput = document.getElementById('task-input');
 const addButton = document.getElementById('add-button');
 const errorMessage = document.getElementById('error-message');
@@ -9,7 +8,14 @@ const activeButton = document.getElementById('active-button');
 const completedButton = document.getElementById('completed-button');
 
 // Initialize tasks array
-let tasks = [];
+let tasks;
+
+// Check if tasks exist in local storage, if exist retrieve it otherwise create new array
+if (localStorage.getItem('tasks')) {
+tasks = JSON.parse(localStorage.getItem('tasks'));
+} else {
+tasks = [];
+}
 
 // Add event listener to add button
 addButton.addEventListener('click', addTask);
@@ -24,49 +30,55 @@ completedButton.addEventListener('click', showCompletedTasks);
 
 // Function to add a task
 function addTask() {
-  const task = taskInput.value.trim();
- 
-  // Check for blank or incorrect content
-  if (task === '') {
-    showError('Task cannot be blank');
-    return;
-  }
- 
-  // Add task to tasks array
-  tasks.push({ name: task, completed: false });
- 
-  // Clear input field
-  taskInput.value = '';
- 
-  // Render tasks
-  renderTasks();
+const task = taskInput.value.trim();
+
+// Check for blank or incorrect content
+if (task === '') {
+showError('Task cannot be blank');
+return;
+}
+
+// Add task to tasks array
+tasks.push({ name: task, completed: false });
+
+// Save tasks array to local storage
+localStorage.setItem('tasks', JSON.stringify(tasks));
+
+// Clear input field
+taskInput.value = '';
+
+// Render tasks
+renderTasks();
 }
 
 // Function to handle task list click events
 function handleTaskListClick(event) {
-  const target = event.target;
- 
-  // Check if delete button is clicked
-  if (target.classList.contains('delete-button')) {
-    const index = parseInt(target.dataset.index);
-   
-    // Remove task from tasks array
-    tasks.splice(index, 1);
-   
-    // Render tasks
-    renderTasks();
-  }
- 
-  // Check if checkbox is clicked
-  if (target.classList.contains('checkbox')) {
-    const index = parseInt(target.dataset.index);
-   
-    // Toggle completed status of task
-    tasks[index].completed = !tasks[index].completed;
-   
-    // Render tasks
-    renderTasks();
-  }
+const target = event.target;
+
+// Check if delete button is clicked
+if (target.classList.contains('delete-button')) {
+const index = parseInt(target.dataset.index);
+// Remove task from tasks array
+tasks.splice(index, 1);
+
+// Save tasks array to local storage
+localStorage.setItem('tasks', JSON.stringify(tasks));
+
+// Render tasks
+renderTasks();
+}
+// Check if checkbox is clicked
+if (target.classList.contains('checkbox')) {
+  const index = parseInt(target.dataset.index);
+  // Toggle completed status of task
+tasks[index].completed = !tasks[index].completed;
+
+// Save tasks array to local storage
+localStorage.setItem('tasks', JSON.stringify(tasks));
+
+// Render tasks
+renderTasks();
+}
 }
 
 // Function to show all tasks
@@ -91,7 +103,7 @@ function renderTasks(filteredTasks = tasks) {
   // Clear task list
   taskList.innerHTML = '';
  
-  // Render tasks
+  // Render tasks, go through the task list with a for each loophole
   filteredTasks.forEach((task, index) => {
     const listItem = document.createElement('li');
     listItem.innerHTML = `
