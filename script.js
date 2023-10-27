@@ -1,3 +1,4 @@
+// Get DOM elements
 const taskInput = document.getElementById('task-input');
 const addButton = document.getElementById('add-button');
 const errorMessage = document.getElementById('error-message');
